@@ -11,6 +11,8 @@
 			</view>
 		</view>
 		<!-- 搜索框结束 -->
+		<!-- 搜索框结束 -->
+		<!-- 搜索框结束 -->
 		<!-- 导航栏Tab开始 -->
 		<view>
 			<scroll-view class="nav bg-white" scroll-x>
