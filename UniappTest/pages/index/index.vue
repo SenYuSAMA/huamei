@@ -11,13 +11,12 @@
 			</view>
 		</view>
 		<!-- 搜索框结束 -->
-		<!-- 搜索框结束 -->
-		<!-- 搜索框结束 -->
 		<!-- 导航栏Tab开始 -->
 		<view>
 			<scroll-view class="nav bg-white" scroll-x>
 				<view class="flex text-center">
-					<view :class="thisTab==index?'text-orange cur':''" @click="changeTab(index)" v-for="(item,index) in TabLists" :key="index" class="cu-item flex-sub">
+					<view :class="thisTab==index?'text-orange cur':''" @click="changeTab(index)" v-for="(item,index) in TabLists" :key="index"
+					 class="cu-item flex-sub">
 						{{item}}
 					</view>
 				</view>
@@ -25,9 +24,9 @@
 		</view>
 		<!-- 导航栏Tab结束 -->
 		<!-- 轮播图开始 -->
-		<swiper v-for="(item,index) in bannerLists" :key="index"  style="margin-top: 5upx; height: 250upx;" class="square-dot" :circular="true" :indicator-dots="true">
-			<swiper-item>
-				<image mode="scaleToFill" class="swiperimg" :src="item.url"></image>
+		<swiper style="margin-top: 5upx;" class="square-dot" :circular="true" :indicator-dots="true">
+			<swiper-item v-for="(item,index) in bannerLists" :key="index">
+				<image mode="scaleToFill" class="swiperimg" :src="item.picUrl"></image>
 			</swiper-item>
 		</swiper>
 		<!-- 轮播图结束 -->
@@ -61,21 +60,44 @@
 					<text class="cuIcon-right"></text>
 				</view>
 			</view>
-			
-			<view class="flex justify-around" >
-				<view  v-for="i in 5" :key="i">
-					<view class="flex justify-center"style="position: relative;">
+
+			<view class="flex justify-around">
+				<view v-for="i in 5" :key="i">
+					<view class="flex justify-center" style="position: relative;">
 						<image style="width: 150upx;height: 150upx;" src="../../static/oneplus8.jpg"></image>
-						<view class="cu-tag bg-orange "style="position: absolute;bottom: 10upx;">补贴价</view>
+						<view class="cu-tag bg-orange " style="position: absolute;bottom: 10upx;">补贴价</view>
 					</view>
 					<view style="text-align: center;">
-						<text style=""class="text-orange text-bold">￥3999</text>
+						<text style="" class="text-orange text-bold">￥3999</text>
 					</view>
 				</view>
 			</view>
-			
+
 		</view>
 		<!-- 百亿补贴结束 -->
+		<!-- 商品列表开始 -->
+		<view>
+			<view class="flex bg-white justify-around" style="margin-top: 5upx;padding: 8upx 8upx 8upx 8upx" v-for="(item,index) in goodLists.slice(0,5)"
+			 :key="index">
+				<view class="goods">
+					<image :src="item.pic"></image>
+				</view>
+				<view class="flex justify-between" style="width: 400upx;flex-direction: column;">
+					<view>
+						<view class=" cu-tag bg-gradual-orange round">
+							{{item.name}}
+						</view>
+						<view>
+							{{item.characteristic}}
+						</view>
+					</view>
+					<view>
+						{{item.minPrice}}
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- 商品列表结束 -->
 	</view>
 </template>
 
@@ -83,105 +105,129 @@
 	const WXAPI = require('apifm-wxapi')
 	WXAPI.init('huamei')
 	export default {
-		data(){
+		data() {
 			return {
 				title: 'Hello',
-				shu:null,
-				search:"",
-				TabLists:["热门","水果","蔬菜","肉类","众筹"],
-				thisTab:0,
-				guideLists:[
-					{
-						url:"../../static/icon/analyse.png",
-						name:"财经分析"
+				shu: null,
+				search: "",
+				TabLists: ["热门", "水果", "蔬菜", "肉类", "众筹"],
+				thisTab: 0,
+				guideLists: [{
+						url: "../../static/icon/analyse.png",
+						name: "财经分析"
 					},
 					{
-						url:"../../static/icon/bank.png",
-						name:"银行"
+						url: "../../static/icon/bank.png",
+						name: "银行"
 					},
 					{
-						url:"../../static/icon/rise.png",
-						name:"上涨趋势"
+						url: "../../static/icon/rise.png",
+						name: "上涨趋势"
 					},
 					{
-						url:"../../static/icon/save.png",
-						name:"存款"
+						url: "../../static/icon/save.png",
+						name: "存款"
 					},
 					{
-						url:"../../static/icon/new.png",
-						name:"新闻消息"
+						url: "../../static/icon/new.png",
+						name: "新闻消息"
 					}
 				],
-				bannerLists:[],
+				bannerLists: [],
+				goodLists: [],
 			}
 		},
 		methods: {
-			getBanners(){
+			getBanners() {
 				uni.request({
-					url:'https://api.it120.cc/huamei/banner/list',
-					data:{
-						type:'1'
+					url: 'https://api.it120.cc/huamei/banner/list',
+					data: {
+						type: 'index'
 					},
 					success: (res) => {
-						console.log(res.data)
+						this.bannerLists = res.data.data;
 					}
 				})
 			},
-			change(){
+			getGoods() {
+				uni.request({
+					url: 'https://api.it120.cc/huamei/shop/goods/list',
+					data: {
+						categoryId: '138915',
+					},
+					success: (res) => {
+						this.goodLists = res.data.data;
+					}
+				}, )
+			},
+			change() {
 				this.shu = "has clicked"
 			},
-			changeTab(index){
-				this.thisTab=index;
+			changeTab(index) {
+				this.thisTab = index;
 			},
 		},
 		onLoad() {
 			this.getBanners()
+			this.getGoods()
 		},
-		
+
 	}
 </script>
 
 <style>
-	.swiperimg{
+	.swiperimg {
 		width: 750upx;
 		height: 250upx;
 	}
-	.zhongchou{
+
+	.zhongchou {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		height: 90upx;
-		padding-left:20upx;
+		padding-left: 20upx;
 		padding-right: 20upx;
 	}
-	.guide-icon{
+
+	.guide-icon {
 		width: 80upx;
 		height: 80upx;
-		margin-left: 20upx;margin-right: 20upx;
+		margin-left: 20upx;
+		margin-right: 20upx;
 	}
-	.guide{
+
+	.guide {
 		display: flex;
 		align-items: center;
 		justify-content: space-around;
-		
+
 	}
-	.guide-text{
+
+	.guide-text {
 		font: bold;
 		text-align: center;
 	}
-	.butie{
+
+	.butie {
 		margin-top: 10upx;
 	}
-	.buleft{
-		
+
+	.buleft {
+
 		margin-top: 20upx;
 		margin-bottom: 20upx;
-		
+
 	}
-	.buleft image{
+
+	.buleft image {
 		width: 60upx;
 		height: 60upx;
 		margin-left: 5upx;
 	}
-	
+
+	.goods image {
+		width: 250upx;
+		height: 250upx;
+	}
 </style>
