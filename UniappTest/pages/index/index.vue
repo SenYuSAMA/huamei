@@ -85,14 +85,14 @@
 				</view>
 				<view class="flex justify-between" style="width: 400upx;flex-direction: column;">
 					<view>
-						<view class=" cu-tag bg-gradual-orange round">
+						<view class="bg-gradual-red text-center">
 							{{item.name}}
 						</view>
-						<view>
+						<view class="text-black" style="margin-top: 30upx;">
 							{{item.characteristic}}
 						</view>
 					</view>
-					<view>
+					<view class="text-price text-red">
 						{{item.minPrice}}
 					</view>
 				</view>
